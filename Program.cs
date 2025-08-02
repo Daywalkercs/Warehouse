@@ -26,6 +26,7 @@ namespace Warehouse
                 db.Database.Migrate();
             }
 
+
             // Configure the HTTP request pipeline.
 
             app.UseHttpsRedirection();
