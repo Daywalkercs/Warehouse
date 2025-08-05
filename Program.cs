@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Warehouse.Data;
+using Warehouse.Mappings;
+using Warehouse.Services;
+
 
 namespace Warehouse
 {
@@ -16,8 +20,20 @@ namespace Warehouse
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddScoped<IResourceService, ResourceService>();
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+            builder.Services.AddSwaggerGen();
+
 
             var app = builder.Build();
+
+            // Swagger в режиме разработки
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
 
             // Автосоздание БД
             using (var scope = app.Services.CreateScope())
