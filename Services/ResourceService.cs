@@ -6,7 +6,7 @@ using Warehouse.Models;
 
 namespace Warehouse.Services
 {
-    public class ResourceService : IResourceService
+    public class ResourceService : IResourceManager
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -49,6 +49,17 @@ namespace Warehouse.Services
                 throw new Exception("Ресурс с таким именем уже существует");
 
             entity.Name = dto.Name;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var entity = await _context.Resources.FindAsync(id);
+            if (entity == null)
+                return false;
+
+            _context.Resources.Remove(entity);
             await _context.SaveChangesAsync();
             return true;
         }

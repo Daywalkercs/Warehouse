@@ -20,8 +20,9 @@ namespace Warehouse
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddScoped<IResourceService, ResourceService>();
+            builder.Services.AddScoped<IResourceManager, ResourceService>();
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+            builder.Services.AddScoped<IUnitOfMeasurementManager, UnitOfMeasurementService>();
             builder.Services.AddSwaggerGen();
 
 

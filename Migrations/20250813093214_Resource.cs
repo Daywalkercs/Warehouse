@@ -5,11 +5,25 @@
 namespace Warehouse.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class Resource : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "UnitOfMeasurement",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Abbreviation = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UnitOfMeasurement", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Resources",
                 columns: table => new
@@ -17,25 +31,18 @@ namespace Warehouse.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UnitOfMeasurementId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Resources", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Units",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Units", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Resources_UnitOfMeasurement_UnitOfMeasurementId",
+                        column: x => x.UnitOfMeasurementId,
+                        principalTable: "UnitOfMeasurement",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -45,8 +52,13 @@ namespace Warehouse.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Units_Name",
-                table: "Units",
+                name: "IX_Resources_UnitOfMeasurementId",
+                table: "Resources",
+                column: "UnitOfMeasurementId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UnitOfMeasurement_Name",
+                table: "UnitOfMeasurement",
                 column: "Name",
                 unique: true);
         }
@@ -58,7 +70,7 @@ namespace Warehouse.Migrations
                 name: "Resources");
 
             migrationBuilder.DropTable(
-                name: "Units");
+                name: "UnitOfMeasurement");
         }
     }
 }

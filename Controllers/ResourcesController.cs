@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.Design;
 using Warehouse.DTOs;
 using Warehouse.Services;
 
@@ -8,9 +9,9 @@ namespace Warehouse.Controllers
     [Route("api/[controller]")]
     public class ResourcesController : ControllerBase
     {
-        private readonly IResourceService _service;
+        private readonly IResourceManager _service;
 
-        public ResourcesController(IResourceService service)
+        public ResourcesController(IResourceManager service)
         {
             _service = service;
         }
@@ -56,6 +57,16 @@ namespace Warehouse.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var deleted = await _service.DeleteAsync(id);
+            if (!deleted)
+                return NotFound();
+
+            return NoContent();
         }
 
         [HttpPatch("{id}/archive")]

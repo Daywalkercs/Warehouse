@@ -11,8 +11,8 @@ using Warehouse.Data;
 namespace Warehouse.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250802095802_Init")]
-    partial class Init
+    [Migration("20250813093214_Resource")]
+    partial class Resource
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,10 +40,15 @@ namespace Warehouse.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UnitOfMeasurementId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
+
+                    b.HasIndex("UnitOfMeasurementId");
 
                     b.ToTable("Resources");
                 });
@@ -56,20 +61,36 @@ namespace Warehouse.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Abbreviation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Units");
+                    b.ToTable("UnitOfMeasurement");
+                });
+
+            modelBuilder.Entity("Warehouse.Models.Resource", b =>
+                {
+                    b.HasOne("Warehouse.Models.UnitOfMeasurement", "UnitOfMeasurement")
+                        .WithMany("Resources")
+                        .HasForeignKey("UnitOfMeasurementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UnitOfMeasurement");
+                });
+
+            modelBuilder.Entity("Warehouse.Models.UnitOfMeasurement", b =>
+                {
+                    b.Navigation("Resources");
                 });
 #pragma warning restore 612, 618
         }

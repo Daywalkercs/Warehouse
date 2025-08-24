@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Warehouse.DTOs;
-using Warehouse.Migrations;
 using Warehouse.Models;
 
 namespace Warehouse.Mappings
@@ -14,8 +13,13 @@ namespace Warehouse.Mappings
             CreateMap<UpdateResourceDto, Resource>();
 
             CreateMap<UnitOfMeasurement, UnitDto>().ReverseMap();
-            CreateMap<CreateUnitDto, CreateUnitDto>();
-            CreateMap<UpdateUnitDto, CreateUnitDto>();
+            CreateMap<CreateUnitDto, UnitOfMeasurement>();
+            CreateMap<UpdateUnitDto, UnitOfMeasurement>();
+
+            CreateMap<Arrival, ArrivalDto>().ForMember
+                (dest => dest.ResourceName, opt => opt.MapFrom(src => src.Resource.Name));
+            CreateMap<CreateArrivalDto, Arrival>();
+            CreateMap<UpdateArrivalDto, Arrival>();
         }
     }
 }
