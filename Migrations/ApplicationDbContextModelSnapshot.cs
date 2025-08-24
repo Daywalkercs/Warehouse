@@ -34,7 +34,8 @@ namespace Warehouse.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<int>("ResourceId")
                         .HasColumnType("int");
@@ -56,11 +57,11 @@ namespace Warehouse.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("State")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("UnitOfMeasurementId")
                         .HasColumnType("int");
@@ -85,11 +86,11 @@ namespace Warehouse.Migrations
 
                     b.Property<string>("Abbreviation")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -115,7 +116,7 @@ namespace Warehouse.Migrations
                     b.HasOne("Warehouse.Models.UnitOfMeasurement", "UnitOfMeasurement")
                         .WithMany("Resources")
                         .HasForeignKey("UnitOfMeasurementId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("UnitOfMeasurement");

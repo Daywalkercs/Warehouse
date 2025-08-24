@@ -33,15 +33,8 @@ namespace Warehouse.Controllers
         [HttpPost]
         public async Task<ActionResult<ResourceDto>> Create(CreateResourceDto dto)
         {
-            try
-            {
-                var created = await _service.CreateAsync(dto);
-                return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var created = await _service.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]

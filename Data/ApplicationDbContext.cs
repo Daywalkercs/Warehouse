@@ -16,19 +16,45 @@ namespace Warehouse.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Resource>()
-                .HasIndex(r => r.Name)
-                .IsUnique();
+          
+            modelBuilder.Entity<Resource>(entity =>
+            {
+                // Уникальный индекс по имени
+                entity.HasIndex(r => r.Name).IsUnique();
 
-            modelBuilder.Entity<UnitOfMeasurement>()
-                .HasIndex(u => u.Name)
-                .IsUnique();
+                // Все текстовые поля как nvarchar
+                entity.Property(r => r.Name).HasColumnType("nvarchar(200)");
+                entity.Property(r => r.State).HasColumnType("nvarchar(50)");
 
-            modelBuilder.Entity<Arrival>()
-                .HasOne(a => a.Resource)
-                .WithMany(r => r.Arrivals)
-                .HasForeignKey(a => a.ResourceId)
-                .OnDelete(DeleteBehavior.Restrict);
+                // Связь с UnitOfMeasurement
+                entity.HasOne(r => r.UnitOfMeasurement)
+                      .WithMany(u => u.Resources)
+                      .HasForeignKey(r => r.UnitOfMeasurementId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            
+            modelBuilder.Entity<UnitOfMeasurement>(entity =>
+            {
+                entity.HasIndex(u => u.Name).IsUnique();
+
+                entity.Property(u => u.Name).HasColumnType("nvarchar(200)");
+                entity.Property(u => u.Abbreviation).HasColumnType("nvarchar(50)");
+            });
+
+            
+            modelBuilder.Entity<Arrival>(entity =>
+            {
+                // Связь с Resource
+                entity.HasOne(a => a.Resource)
+                      .WithMany(r => r.Arrivals)
+                      .HasForeignKey(a => a.ResourceId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // Настройка decimal поля Quantity
+                entity.Property(a => a.Quantity).HasPrecision(18, 4);
+            });
         }
+
     }
 }
