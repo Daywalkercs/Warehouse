@@ -42,7 +42,6 @@ namespace Warehouse.Data
                 entity.Property(u => u.Abbreviation).HasColumnType("nvarchar(50)");
             });
 
-            
             modelBuilder.Entity<Arrival>(entity =>
             {
                 // Связь с Resource
@@ -54,6 +53,8 @@ namespace Warehouse.Data
                 // Настройка decimal поля Quantity
                 entity.Property(a => a.Quantity).HasPrecision(18, 4);
             });
+
+
         }
 
     }

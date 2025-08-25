@@ -41,6 +41,7 @@ namespace Warehouse
             {
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 db.Database.Migrate();
+                DbInitializer.Seed(db);
             }
 
 
