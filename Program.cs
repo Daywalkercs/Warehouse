@@ -25,8 +25,20 @@ namespace Warehouse
             builder.Services.AddScoped<IUnitOfMeasurementManager, UnitOfMeasurementService>();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("DevCors", policy =>
+                {
+                    policy.WithOrigins("https://localhost:7187/")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
 
             var app = builder.Build();
+
+            app.UseCors("DevCors");
 
             // Swagger в режиме разработки
             if (app.Environment.IsDevelopment())
