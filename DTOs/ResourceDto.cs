@@ -10,6 +10,7 @@
     public class CreateResourceDto
     {
         public string Name { get; set; } = null!;
+        public int UnitOfMeasurementId { get; set; }
     }
 
     public class UpdateResourceDto
